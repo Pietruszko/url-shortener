@@ -16,7 +16,9 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from urlshortener.views import ShortenedURLViewSet
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('api/shorten/', ShortenedURLViewSet.as_view(), name='shorten'),
 ]
