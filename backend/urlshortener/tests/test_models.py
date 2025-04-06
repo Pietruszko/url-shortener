@@ -1,6 +1,6 @@
 import pytest
 from ..models import ShortenedURL
-from django.db import IntegrityError
+from django.db import IntegrityError, DataError
 
 @pytest.mark.django_db
 def test_shortened_url_creation():
@@ -21,3 +21,12 @@ def test_shortened_url_unique_short_code():
     ShortenedURL.objects.create(original_url=original_url, short_code=short_code)
     with pytest.raises(IntegrityError):
         ShortenedURL.objects.create(original_url=original_url, short_code=short_code)
+
+@pytest.mark.django_db
+def test_shortened_url_valid_short_code_max_length():
+    """Test that the ShortenedURL model validates the max length of the short_code field."""
+    original_url = "https://www.example.com"
+    short_code = "abc1234567890"
+    with pytest.raises(DataError):
+        ShortenedURL.objects.create(original_url=original_url, short_code=short_code)
+
