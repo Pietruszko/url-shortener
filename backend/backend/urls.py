@@ -16,10 +16,14 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from urlshortener.views import ShortenedURLViewSet, RedirectView
+from urlshortener.views import ShortenedURLViewSet, RedirectView, RegisterView, ShortenedURLListView
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/shorten/', ShortenedURLViewSet.as_view(), name='shorten'),
     path('<str:short_code>/', RedirectView.as_view(), name='redirect'),
+    path('api/register/', RegisterView.as_view(), name='register'),
+    path('api/login/', TokenObtainPairView.as_view(), name='login'),
+    path('api/shorten/list', ShortenedURLListView.as_view(), name='list'),
 ]

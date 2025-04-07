@@ -2,6 +2,7 @@ from rest_framework import serializers
 from .models import ShortenedURL
 import random
 import string
+from django.contrib.auth.models import User
 
 def generate_short_code(lenght=10):
         alphabet = string.ascii_letters + string.digits
@@ -21,5 +22,19 @@ class ShortenedURLSerializer(serializers.ModelSerializer):
         short_code = generate_short_code()
         while ShortenedURL.objects.filter(short_code=short_code).exists():
             short_code = generate_short_code()
-        shortened_url = ShortenedURL.objects.create(original_url=original_url, short_code=short_code)
+        data['user'] = self.context['request'].user
+        shortened_url = ShortenedURL.objects.create(original_url=original_url, short_code=short_code, user=data['user'])
+        shortened_url.save()
         return shortened_url
+    
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['username', 'password']
+        extra_kwargs = {
+            'password': {'write_only': True},
+        }
+
+    def create(self, validated_data):
+        user = User.objects.create_user(**validated_data)
+        return user
