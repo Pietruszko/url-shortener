@@ -11,19 +11,25 @@ def generate_short_code(lenght=10):
 class ShortenedURLSerializer(serializers.ModelSerializer):
     class Meta:
         model = ShortenedURL
-        fields = ['original_url', 'short_code', 'created_at']
+        fields = ['original_url', 'short_code', 'created_at', 'user']
         extra_kwargs = {
             'short_code': {'read_only': True},
             'created_at': {'read_only': True},
+            'user': {'read_only': True},
         }
 
     def create(self, data):
+        request = self.context.get('request', None)
+        user = request.user if request and request.user.is_authenticated else None
         original_url = data['original_url']
         short_code = generate_short_code()
         while ShortenedURL.objects.filter(short_code=short_code).exists():
             short_code = generate_short_code()
-        data['user'] = self.context['request'].user
-        shortened_url = ShortenedURL.objects.create(original_url=original_url, short_code=short_code, user=data['user'])
+        shortened_url = ShortenedURL.objects.create(
+            original_url=original_url, 
+            short_code=short_code, 
+            user=user
+            )
         shortened_url.save()
         return shortened_url
     

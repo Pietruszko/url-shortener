@@ -6,11 +6,11 @@ from django.http import HttpResponseRedirect
 from django.views.generic import RedirectView
 from django.contrib.auth.models import User
 
-# EccBuGEUAn - short code for github.com for tests
 
 class ShortenedURLViewSet(generics.CreateAPIView):
     queryset = ShortenedURL.objects.all()
     serializer_class = ShortenedURLSerializer
+    permission_classes = [permissions.AllowAny]
 
 class RedirectView(RedirectView):
     def get(self, request, short_code):
