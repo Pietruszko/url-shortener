@@ -6,6 +6,7 @@ from rest_framework.test import APIClient
 
 @pytest.mark.django_db
 def test_register_user(client):
+    """Test the registration of a new user."""
     data = {
         'username': 'testuser',
         'password': 'testpass'
@@ -16,6 +17,7 @@ def test_register_user(client):
 
 @pytest.mark.django_db
 def test_login_user(client):
+    """Test the login of an existing user."""
     data = {
         'username': 'testuser',
         'password': 'testpass'
@@ -27,6 +29,7 @@ def test_login_user(client):
 
 @pytest.mark.django_db
 def test_shortened_url_list_authenticated(client):
+    """Test access to the list of shortened URLs for an authenticated user."""
     user = User.objects.create_user(username='testuser', password='testpass')
     token = str(AccessToken.for_user(user))
     client = APIClient()
@@ -36,6 +39,7 @@ def test_shortened_url_list_authenticated(client):
 
 @pytest.mark.django_db
 def test_shortened_url_list_unauthenticated(client):
+    """Test access denied to the list of shortened URLs for an unauthenticated user."""
     response = client.get(reverse('list'))
     assert response.status_code == 401
 

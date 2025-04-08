@@ -1,6 +1,9 @@
 import pytest
 from django.urls import reverse
 from ..models import ShortenedURL
+from django.contrib.auth.models import User
+from rest_framework_simplejwt.tokens import AccessToken
+from rest_framework.test import APIClient
 
 @pytest.mark.django_db
 def test_full_workflow(client):
@@ -39,3 +42,35 @@ def test_error_handlig_flow(client):
     short_code = 'abc123abc1'
     with pytest.raises(ShortenedURL.DoesNotExist):
         response = client.get(reverse('redirect', args=[short_code]), follow=False)
+
+@pytest.mark.django_db
+def test_full_workflow_authenticated_user(client):
+    """Test the full workflow of registering an account, logging in, creating shortened url for user and accessing user's urls list."""
+    client = APIClient()
+
+    user_data = {
+        'username': 'testuser',
+        'password': 'testpass'
+    }
+    response_register = client.post(reverse('register'), data=user_data)
+    assert response_register.status_code == 201
+
+    response_login = client.post(reverse('login'), data=user_data)
+    assert response_login.status_code == 200
+    token = response_login.data['access']
+    client.credentials(HTTP_AUTHORIZATION=f"Bearer {token}")
+
+    original_url = "https://www.example.com"
+    response_create = client.post(reverse('shorten'), data={'original_url': original_url})
+    assert response_create.status_code == 201
+    shortened_url = ShortenedURL.objects.first()
+    assert shortened_url.original_url == original_url
+    assert shortened_url.user.username == user_data['username']
+
+    response_list = client.get(reverse('list'))
+    assert response_list.status_code == 200
+    assert len(response_list.data) == 1
+    assert shortened_url.short_code == response_list.data[0]['short_code']
+    
+    
+
