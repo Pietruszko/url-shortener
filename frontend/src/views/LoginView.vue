@@ -41,7 +41,7 @@ const handleRegisterRedirect = () => {
     try {
         router.push('/register')
     } catch (error) {
-        console.error(error)
+        alert('Register failed!')
     }
 }
 
@@ -52,6 +52,15 @@ const handleLogin = async () => {
         router.push('/dashboard')
     } catch (error) {
         alert('Login failed!')
+    }
+}
+
+const handleCreateShortUrl = async () => {
+    try {
+        const response = await api.post('shorten/', shortenedURLForm.value)
+        alert(`Your shortened URL is: 127.0.0.1:8000/${response.data.short_code}`)
+    } catch (error) {
+        alert('Failed to create short URL')
     }
 }
 </script>

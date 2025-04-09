@@ -7,6 +7,7 @@
                 <p>{{ url.short_code }}</p>
             </li>               
         </ul>
+        <button @click="handleLogout" class="logout-button">Logout</button> 
     </div>
 </template>
 
@@ -17,6 +18,15 @@ import { useRouter } from 'vue-router'
 
 const router = useRouter()
 const urls = ref([])
+
+const handleLogout = async () => {
+    try {
+        localStorage.removeItem('token')
+        router.push('/login')
+    } catch (error) {
+        console.error('Error logging out:', error)
+    }
+}
 
 onMounted(fetchUrls)
 
