@@ -48,7 +48,7 @@ const handleRegisterRedirect = () => {
 const handleLogin = async () => {
     try {
         const response = await api.post('login/', form.value)
-        localStorage.setItem('token', response.data.token)
+        localStorage.setItem('token', response.data.access)
         router.push('/dashboard')
     } catch (error) {
         alert('Login failed!')
