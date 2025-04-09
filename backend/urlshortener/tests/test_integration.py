@@ -1,8 +1,6 @@
 import pytest
 from django.urls import reverse
 from ..models import ShortenedURL
-from django.contrib.auth.models import User
-from rest_framework_simplejwt.tokens import AccessToken
 from rest_framework.test import APIClient
 
 @pytest.mark.django_db
@@ -40,8 +38,9 @@ def test_error_handlig_flow(client):
     assert response.status_code == 400
 
     short_code = 'abc123abc1'
-    with pytest.raises(ShortenedURL.DoesNotExist):
-        response = client.get(reverse('redirect', args=[short_code]), follow=False)
+    ShortenedURL.objects.all().delete()
+    response = client.get(reverse('redirect', args=[short_code]), follow=True)
+    assert response.status_code == 404
 
 @pytest.mark.django_db
 def test_full_workflow_authenticated_user(client):

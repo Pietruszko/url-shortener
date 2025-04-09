@@ -1,6 +1,7 @@
 import pytest
 from ..models import ShortenedURL
 from django.urls import reverse
+from django.core.cache import cache
 
 @pytest.mark.django_db
 def test_redirect_view_redirects_to_original_url(client):
@@ -27,3 +28,18 @@ def test_shortenedurl_view_set_create_shortened_url(client):
     assert 'short_code' in response.data
     assert response.data['original_url'] == data['original_url']
     assert ShortenedURL.objects.count() == 1
+
+@pytest.mark.django_db
+def test_redirect_view_caching(client):
+    """Test that the redirect view caches the original URL."""
+    data = {
+        "original_url": "https://www.example.com",
+        "short_code": "abc123abc1"
+    }
+    ShortenedURL.objects.create(**data)
+    response = client.get(reverse('redirect', args=[data['short_code']]))
+    assert response.status_code == 302
+    assert cache.get('redirect_abc123abc1') == data['original_url']
+    ShortenedURL.objects.all().delete()
+    response = client.get(reverse('redirect', args=[data['short_code']]))
+    assert response.status_code == 302
