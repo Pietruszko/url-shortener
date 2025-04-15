@@ -42,7 +42,7 @@ const handleLogout = async () => {
 
 const handleCreateShortUrl = async () => {
     try {
-        const response = await api.post('/shorten', shortenedURLForm.value)
+        const response = await api.post('/shorten/', shortenedURLForm.value)
         urls.value.push(response.data)
         alert(`Your shortened URL is: 127.0.0.1:8000/${response.data.short_code}`)
     } catch (error) {
