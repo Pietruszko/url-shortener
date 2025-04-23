@@ -1,19 +1,19 @@
 <template>
     <div class="min-h-screen w-full bg-black p-8">
-        <div class="bg-emerald-600 mx-auto w-160 p-4 rounded-2xl m-32">
-            <h1 class="text-center text-2xl">You can create short url as a guest or login to have access to your urls.</h1>
+        <div class=" border-gray-500 border-2 mx-auto w-160 p-4 rounded-2xl m-32">
+            <h1 class="text-center text-2xl text-white">You can create short url as a guest or login to have access to your urls.</h1>
             <form @submit.prevent="handleLogin">
-                <input v-model="form.username" placeholder="Username" required class="border-2 mr-2 p-1">
-                <input v-model="form.password" type="password" placeholder="Password" required class="border-2 p-1">
-                <button type="submit" class="bg-emerald-400 rounded-3xl p-1 m-1 border-black border-2 hover:bg-emerald-800">Login</button>
+                <input v-model="form.username" placeholder="Username" required class="mr-2 p-1 placeholder-gray-400 bg-white">
+                <input v-model="form.password" type="password" placeholder="Password" required class="mr-2 p-1 placeholder-gray-400 bg-white">
+                <button type="submit" class="bg-emerald-400 rounded-3xl p-1.5 m-0.5  hover:bg-emerald-600 text-white w-20">Login</button>
             </form>
-            <h2>Create short url</h2>
+            <h2 class="text-white">Create short url</h2>
             <form @submit.prevent="handleCreateShortUrl" class="input-form">
-                <input v-model="shortenedURLForm.original_url" placeholder="Original URL" required class="border-2 p-1">
-                <button type="submit" class="bg-emerald-400 rounded-3xl p-1 m-1 border-black border-2 hover:bg-emerald-800">Create Short URL</button>
+                <input v-model="shortenedURLForm.original_url" placeholder="Original URL" required class="mr-2 p-1 placeholder-gray-400 bg-white">
+                <button type="submit" class="bg-emerald-400 rounded-3xl p-1.5 m-0.5  hover:bg-emerald-600 text-white w-40">Create Short URL</button>
             </form>
-            <h3>Don't have an account?</h3>
-            <button @click="handleRegisterRedirect" class="bg-emerald-400 rounded-3xl p-1 m-1 border-black border-2 hover:bg-emerald-800">Register</button>
+            <h3 class="text-white">Don't have an account?</h3>
+            <button @click="handleRegisterRedirect" class="bg-emerald-400 rounded-3xl p-1.5 m-0.5  hover:bg-emerald-600 text-white w-20">Register</button>
         </div>
     </div>
 </template>
