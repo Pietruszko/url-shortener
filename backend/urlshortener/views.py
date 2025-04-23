@@ -7,6 +7,7 @@ from django.views.generic import RedirectView
 from django.contrib.auth.models import User
 from .tasks import track_click
 from django.core.cache import cache
+from user_agents import parse
 
 
 class ShortenedURLViewSet(generics.CreateAPIView):
@@ -28,8 +29,11 @@ class RedirectView(RedirectView):
             print(f"Cached URL: {cache_key} -> {original_url}")
         else:
             print("Cache HIT")
+
+        user_agent = request.META.get('HTTP_USER_AGENT', '')
+        if not parse(user_agent).is_bot:  # Only track non-bots
+            track_click.delay(short_code)
             
-        track_click.delay(short_code)
         print(f"Redirecting to: {original_url}") 
         return HttpResponseRedirect(original_url)
     

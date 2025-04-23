@@ -6,7 +6,6 @@ from .models import ShortenedURL
 def track_click(self, short_code):
     """Async task to track a click on a shortened URL."""
     try:
-        # Use filter().update() with F() for atomic increment
         ShortenedURL.objects.filter(short_code=short_code).update(
             clicks=F('clicks') + 1
         )
