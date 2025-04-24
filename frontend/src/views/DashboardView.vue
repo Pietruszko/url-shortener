@@ -17,7 +17,7 @@
                     </span>
                 </li>               
             </ul>
-            <button @click="handleLogout" class="logout-button">Logout</button> 
+            <button @click="handleLogout" class="bg-emerald-400 rounded-3xl p-1.5 m-0.5  hover:bg-emerald-600 text-white w-50">Logout</button> 
         </div>
     </div>
 </template>
